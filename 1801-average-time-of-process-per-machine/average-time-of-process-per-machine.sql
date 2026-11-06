@@ -3,9 +3,9 @@ SELECT
     a.machine_id, 
     ROUND(
         (
-            SUM(a.timestamp) FILTER (WHERE a.activity_type = 'end')  
+            SUM(CASE WHEN a.activity_type = 'end' THEN a.timestamp ELSE 0.0 END)
             - 
-            SUM(a.timestamp) FILTER (WHERE a.activity_type = 'start')
+            SUM(CASE WHEN a.activity_type = 'start' THEN a.timestamp ELSE 0.0 END)
         )::DECIMAL / (
             COUNT(*) FILTER (WHERE a.activity_type = 'start')
         ), 3
