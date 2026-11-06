@@ -2,8 +2,13 @@
 SELECT 
     s.user_id,
     ROUND(
-        COUNT(c.action) FILTER (WHERE c.action = 'confirmed')::DECIMAL / COUNT(*), 
-        2
+        AVG(
+            CASE c.action
+                WHEN 'confirmed' THEN 1.0
+                ELSE 0.0
+            END
+        )
+        , 2
     ) AS confirmation_rate 
 FROM signups s 
 LEFT JOIN confirmations c 
