@@ -1,0 +1,10 @@
+-- Write your PostgreSQL query statement below
+SELECT 
+    r.contest_id, 
+    ROUND(
+        COUNT(r.user_id) * 100.0 / (SELECT NULLIF(COUNT(u.user_id), 0) FROM users u)
+        , 2
+    ) AS percentage
+FROM register r
+GROUP BY r.contest_id
+ORDER BY percentage DESC, r.contest_id ASC
