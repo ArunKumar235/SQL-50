@@ -2,7 +2,7 @@
 SELECT 
     r.contest_id, 
     ROUND(
-        COUNT(r.user_id) * 100.0 / (SELECT NULLIF(COUNT(u.user_id), 0) FROM users u)
+        COUNT(r.user_id) * 100.0 / (SELECT COUNT(u.user_id) FROM users u)
         , 2
     ) AS percentage
 FROM register r
