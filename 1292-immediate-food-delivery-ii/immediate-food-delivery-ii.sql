@@ -1,6 +1,6 @@
 -- Write your PostgreSQL query statement below
 SELECT ROUND(
-    COUNT(CASE WHEN od = pd THEN 1.0 ELSE NULL END) * 100.0 / COUNT(*)
+    AVG(CASE WHEN od = pd THEN 1.0 ELSE 0.0 END) * 100.0
     , 2
 ) AS immediate_percentage
 FROM (
