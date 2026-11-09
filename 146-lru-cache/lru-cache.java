@@ -9,16 +9,16 @@ class Node{
 
 class LRUCache {
     private final int capacity;
-    private final Map<Integer, Node> map;
     private final Node head, tail;
+    private final Map<Integer, Node> map;
 
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        this.map = new HashMap<>();
-        head = new Node(0, 0);
-        tail = new Node(0, 0);
+        this.head = new Node(0, 0);
+        this.tail = new Node(0, 0);
         head.next = tail;
-        tail.prev = head;    
+        tail.prev = head;
+        this.map = new HashMap<>();    
     }
     
     public int get(int key) {
@@ -55,7 +55,7 @@ class LRUCache {
     private void insertAtFront(Node node){
         node.next = head.next;
         node.prev = head;
-        
+
         head.next.prev = node;
         head.next = node;
     }
