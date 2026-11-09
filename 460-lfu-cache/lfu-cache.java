@@ -1,5 +1,5 @@
 // PreReq: LC 146, LC 895
-// ToDo: Replace LinkedHashSet with Map + DoublyLL
+// ToDo: Replace LinkedHashSet with Custom DoublyLL
 class FreqNode{
     int freq;
     LinkedHashSet<Integer> tracker;
