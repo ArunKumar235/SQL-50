@@ -1,6 +1,8 @@
 class Solution {
     public String minWindow(String s, String t) {
         Map<Character, Integer> freq = new HashMap<>();
+        if(s.length() < t.length()) return "";
+        
         for(char ch: t.toCharArray()){
             freq.put(ch, freq.getOrDefault(ch, 0) + 1);
         }
