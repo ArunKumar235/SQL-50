@@ -1,36 +1,32 @@
 class LRUCache {
     private final int capacity;
-    private final Map<Integer, Integer> map;
-    // maintains insertion order, oldest(lru) ..... newest
-    private final LinkedHashSet<Integer> tracker;
-    
+    // maintains insertion order, earliest inserted ....... newly inserted
+    private final LinkedHashMap<Integer, Integer> map;
+
     public LRUCache(int capacity) {
         this.capacity = capacity;
-        this.map = new HashMap<>();
-        this.tracker = new LinkedHashSet<>();    
+        this.map = new LinkedHashMap<>();    
     }
     
     public int get(int key) {
         if(!map.containsKey(key)) return -1;
-        tracker.remove(key);
-        tracker.add(key);
-        return map.get(key);
+        
+        int value = map.get(key);
+        map.remove(key);
+        map.put(key, value);
+        return value;
     }
     
     public void put(int key, int value) {
         if(map.containsKey(key)){
+            map.remove(key);
             map.put(key, value);
-            tracker.remove(key);
-            tracker.add(key);
-        }else{
+        }else{       
             if(map.size() == capacity){
-                int lruKey = tracker.iterator().next();
-                
+                int lruKey = map.keySet().iterator().next();
                 map.remove(lruKey);
-                tracker.remove(lruKey);
             }
             map.put(key, value);
-            tracker.add(key);
         }
     }
 }
