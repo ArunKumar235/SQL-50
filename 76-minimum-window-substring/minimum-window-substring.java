@@ -2,12 +2,13 @@ class Solution {
     public String minWindow(String s, String t) {
         Map<Character, Integer> freq = new HashMap<>();
         if(s.length() < t.length()) return "";
-        
+
         for(char ch: t.toCharArray()){
             freq.put(ch, freq.getOrDefault(ch, 0) + 1);
         }
 
-        String res = s+s;
+        int resL = 0;
+        int resR = s.length() * 2;
 
         int letters = freq.size();
 
@@ -20,8 +21,9 @@ class Solution {
             if(freq.get(chR) == 0) letters--;
 
             while(letters == 0){
-                if(res.length() > (r - l + 1)){
-                    res = s.substring(l, r+1);
+                if((resR - resL + 1) > (r - l + 1)){
+                    resL = l;
+                    resR = r;
                 }
                 char chL = s.charAt(l);
                 if(!freq.containsKey(chL)){
@@ -35,6 +37,6 @@ class Solution {
             }
 
         }
-        return res.length() > s.length() ? "" : res; 
+        return (resR - resL + 1) > s.length() ? "" : s.substring(resL, resR + 1); 
     }
 }
