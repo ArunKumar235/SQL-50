@@ -4,29 +4,28 @@ class Solution {
     private int mod(int num){ return (int) ((num % MOD + MOD) % MOD); }
 
     public int numberOfUniqueGoodSubsequences(String binary){
-        // dp[0] = distinct good subsequences ending with 0
-        // dp[1] = distinct good subsequences ending with 1
-        int[] dp = new int[2];
-        int hasZero = 0;
-
-        for (char c : binary.toCharArray()) {
-            int ch = c - '0';
-            if(ch == 0) hasZero = 1;
-
-            if(ch == 1){
+        int has0 = 0;
+        // distinct good subsequences ending with 0
+        int end0 = 0;
+        // distinct good subsequences ending with 1
+        int end1 = 0;
+        
+        for (char ch : binary.toCharArray()) {
+            if(ch == '1'){
                 // For current character '1':
                 // Append 1 to all existing subsequences + create "1"
-                dp[1] = mod(dp[0] + dp[1] + 1);
+                end1 = mod(end0 + end1 + 1);
             }else{
+                has0 = 1;
                 // For current character '0':
                 // Append 0 to all existing good subsequences
-                dp[0] = mod(dp[0] + dp[1]);
+                end0 = mod(end0 + end1);
             }
         }
 
         // "0" alone is handled separately because leading zeros are not allowed.
         // hasZero tracks whether at least one zero exists in the original string.
-        return mod(dp[0] + dp[1] + hasZero);
+        return mod(end0 + end1 + has0);
     }
 }
 
