@@ -1,4 +1,4 @@
-// Bottom-up DP - Aggregate information from descendants
+// Leaf pruning - Eliminate irrelevant nodes
 class Solution {
     public int collectTheCoins(int[] coins, int[][] edges) {
         // number of nodes in a tree = number of edges + 1
@@ -18,46 +18,50 @@ class Solution {
             deg[v]++;
         }
 
+        // Phase 1: Removing the zero coin leaf nodes (cascading)
         Queue<Integer> leaves = new LinkedList<>();
-        boolean[] active = new boolean[n];
-        Arrays.fill(active, true);
+        boolean[] removed = new boolean[n];
 
-        int[] maxDist = new int[n];
-        
         for(int i = 0; i < n; i++){
-            if(coins[i] == 1) maxDist[i] = 0;
-            else maxDist[i] = -1;
-
-            if(deg[i] == 1) leaves.offer(i);
+            if(deg[i] == 1 && coins[i] == 0) leaves.offer(i);
         }
 
         while(!leaves.isEmpty()){
             int u = leaves.poll();
-
-            if(maxDist[u] >= 2) continue;
-
-            active[u] = false;
-            deg[u]--;
+            removed[u] = true;
 
             for(int v: adj.get(u)){
-                if(active[v]){
-                    if(maxDist[u] != -1){                    
-                        maxDist[v] = Math.max(maxDist[v], maxDist[u] + 1);
-                    }
+                deg[v]--;
+                if(deg[v] == 1 && coins[v] == 0) leaves.offer(v);
+            }
+        }
 
-                    deg[v]--;
-                    if(deg[v] == 1) leaves.offer(v);
+        // Phase 2: Trim two layers of leaves of the pruned subtree
+        // irrespective of it has coins or not
+        for(int step = 0; step < 2; step++){
+            Queue<Integer> q = new LinkedList<>();
+            
+            for(int i = 0; i < n; i++){
+                if(!removed[i] && deg[i] == 1) q.offer(i);
+            }
+
+            while(!q.isEmpty()){
+                int u = q.poll();
+                removed[u] = true;
+
+                for(int v: adj.get(u)){
+                    if(!removed[v]){
+                        deg[v]--;
+                    }
                 }
             }
         }
-        int activeE = 0;
-        for(int[] e: edges){
-            int u = e[0];
-            int v = e[1];
-            if(active[u] && active[v]) activeE++;
+
+        int remNodes = 0;
+        for(int i = 0; i < n; i++){
+            if(!removed[i]) remNodes++;
         }
 
-        return 2*activeE;
-
+        return Math.max(0, (remNodes - 1) * 2);
     }
 }
