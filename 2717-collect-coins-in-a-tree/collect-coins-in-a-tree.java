@@ -1,8 +1,7 @@
+// Bottom-up DP - Aggregate information from descendants
 class Solution {
     public int collectTheCoins(int[] coins, int[][] edges) {
-        // number of nodes in a tree
-        // = 
-        // number of edges + 1
+        // number of nodes in a tree = number of edges + 1
         int n = edges.length + 1;
         
         List<List<Integer>> adj = new ArrayList<>();
