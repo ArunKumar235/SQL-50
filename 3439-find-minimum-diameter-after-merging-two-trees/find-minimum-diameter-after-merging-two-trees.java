@@ -63,8 +63,6 @@ class Solution {
                 }
             }
         }
-        System.out.println(Arrays.toString(deg));
-        
         int diameter = 2 * radius + (n == 2 ? 1 : 0);
         
         return new int[]{radius + (n == 2 ? 1 : 0), diameter};
