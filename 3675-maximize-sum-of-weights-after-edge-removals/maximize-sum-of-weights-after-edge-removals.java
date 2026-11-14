@@ -33,10 +33,8 @@ class Solution {
         if(dp[node][key] != -1) return dp[node][key];
 
         long ans = 0;
-        // capacity largest take node are used
-        PriorityQueue<Long> gains = new PriorityQueue<>();
-        int capacity = k - key;
-        
+        List<Long> gains = new ArrayList<>();
+
         for(int[] edge : adj.get(node)){
             int next = edge[0];
             int w = edge[1];
@@ -49,15 +47,16 @@ class Solution {
             // notTake already contains the optimal answer for the child's entire subtree
             ans += notTake;
 
-            if(take - notTake > 0) gains.offer(take - notTake);
-            if(gains.size() > capacity) gains.poll();
-        }
-        
-        while(!gains.isEmpty()){
-            // replacing the notTake answer with take by adding the difference
-            ans += gains.poll();
+            if(take - notTake > 0) gains.add(take - notTake);
         }
 
+        gains.sort(Collections.reverseOrder());
+        
+        int capacity = k - key;
+        for(int i = 0; i < Math.min(capacity, gains.size()); i++){
+            // replacing the notTake answer with take by adding the difference
+            ans += gains.get(i);
+        }
         return dp[node][key] = ans;
     }
 }
