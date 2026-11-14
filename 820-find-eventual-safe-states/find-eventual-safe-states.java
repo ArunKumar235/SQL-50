@@ -1,33 +1,30 @@
 class Solution {
     public List<Integer> eventualSafeNodes(int[][] graph) {
         int n = graph.length;
-        List<List<Integer>> revAdj = new ArrayList<>();
-        for(int i = 0; i < n; i++) revAdj.add(new ArrayList<>());
-
-        int[] outgoings = new int[n];
-        for(int u = 0; u < n; u++){
-            for(int v: graph[u]){
-                revAdj.get(v).add(u);
-                outgoings[u]++;
-            }
-        }
-
-        Queue<Integer> noOutgoing = new LinkedList<>();
-        for(int u = 0; u < n; u++){
-            if(outgoings[u] == 0) noOutgoing.offer(u);
-        }
-
-        while(!noOutgoing.isEmpty()){
-            int v = noOutgoing.poll();
-
-            for(int u : revAdj.get(v)){
-                outgoings[u]--;
-                if(outgoings[u] == 0) noOutgoing.offer(u);
-            }
-        }
-
         List<Integer> res = new ArrayList<>();
-        for(int u = 0; u < n; u++) if(outgoings[u] == 0) res.add(u);
+
+        int[] visited = new int[n];
+        
+        for(int i = 0; i < n; i++){
+            if(dfs(i, graph, visited)) res.add(i);
+        }
         return res;
+    }
+    
+    // visited[i] = 0 -> yet to explore
+    // visited[i] = 1 -> cycle detected
+    // visited[i] = 2 -> fully explored
+
+    private boolean dfs(int node, int[][] graph, int[] visited){
+        if(visited[node] == 2) return true;
+
+        if(visited[node] == 1) return false;
+
+        visited[node] = 1;
+        for(int v : graph[node]){
+            if(!dfs(v, graph, visited)) return false;
+        }
+        visited[node] = 2;
+        return true;
     }
 }
