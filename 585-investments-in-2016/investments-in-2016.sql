@@ -6,9 +6,9 @@ WHERE tiv_2015 IN (
     FROM insurance
     GROUP BY tiv_2015
     HAVING COUNT(*) > 1
-) AND (lat, lon) NOT IN (
+) AND (lat, lon) IN (
     SELECT lat, lon
     FROM insurance
     GROUP BY lat, lon
-    HAVING COUNT(*) > 1
+    HAVING COUNT(*) = 1
 )
